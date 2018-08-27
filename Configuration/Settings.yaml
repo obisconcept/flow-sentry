@@ -1,0 +1,7 @@
+ObisConcept:
+  FlowSentry:
+    enabled: true
+    host: 'sentry.io'
+    project:
+      key: '80be0f1592c54693888f8c2ae318bd2c'
+      id: '1269370'

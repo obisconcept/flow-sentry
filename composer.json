@@ -1,0 +1,36 @@
+{
+    "name": "obisconcept/neos-sentry",
+    "description": "Integrates the Sentry error tracking tool into the Neos CMS.",
+    "type": "neos-plugin",
+    "require": {
+        "neos/flow": "^4.0",
+        "neos/neos": "^3.0",
+
+        "sentry/sentry": "^1.9"
+    },
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "obis|CONCEPT GmbH & Co. KG",
+            "email": "dev@obis-concept.de",
+            "homepage": "https://www.obis-concept.de/",
+            "role": "Owner"
+        },
+        {
+            "name": "Maximilian Schmidt",
+            "email": "m.schmidt@obis-concept.de",
+            "role": "Lead Developer"
+        }
+    ],
+    "support": {
+        "email": "dev@obis-concept.de",
+        "source": "https://github.com/obisconcept/flow-sentry",
+        "issues": "https://github.com/obisconcept/flow-sentry/issues",
+        "wiki": "https://github.com/obisconcept/flow-sentry/wiki"
+    },
+    "extra": {
+        "neos": {
+            "package-key": "ObisConcept.NeosSentry"
+        }
+    }
+}

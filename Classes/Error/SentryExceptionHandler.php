@@ -27,8 +27,6 @@ class SentryExceptionHandler extends ProductionExceptionHandler
      */
     public function handleException($exception)
     {
-        \Neos\Flow\var_dump($exception);
-
         // Ignore if the error is suppressed by using the shut-up operator @
         if (error_reporting() === 0) {
             return;
@@ -36,26 +34,26 @@ class SentryExceptionHandler extends ProductionExceptionHandler
 
         $context = [
             'extra' => [
-                'Request Type' => FLOW_SAPITYPE,
-                'Flow Context' => FLOW_CONTEXT,
-                'Project Root' => FLOW_PATH_ROOT,
-                'Document Root' => FLOW_PATH_WEB,
-                'Flow Version' => FLOW_VERSION_BRANCH,
+                'Request Type' => constant('FLOW_SAPITYPE'),
+                'Flow Context' => (constant('FLOW_CONTEXT') ?: 'Development'),
+                'Project Root' => constant('FLOW_PATH_ROOT'),
+                'Document Root' => constant('FLOW_PATH_WEB'),
+                'Flow Version' => constant('FLOW_VERSION_BRANCH'),
             ],
-            'fingerprint' => ['{{ default }}', get_class($e)],
+            'fingerprint' => ['{{ default }}', get_class($exception)],
             'level' => 'error',
             'logger' => [self::class],
         ];
 
-        /** @var User|null $user */
-        $user = $this->userService->getCurrentUser();
+        // /** @var User|null $user */
+        // $user = $this->userService->getCurrentUser();
 
-        if ($user !== null) {
-            $context['user'] = [
-                'id' => $user->getName() . '(' . $user->getLabel() . ')',
-                'email' => $user->getPrimaryElectronicAddress(),
-            ];
-        }
+        // if ($user !== null) {
+        //     $context['user'] = [
+        //         'id' => $user->getName() . '(' . $user->getLabel() . ')',
+        //         'email' => $user->getPrimaryElectronicAddress(),
+        //     ];
+        // }
 
         $this->sentryClient->captureException($exception, $context);
 

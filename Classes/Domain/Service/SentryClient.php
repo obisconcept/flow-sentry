@@ -1,6 +1,6 @@
 <?php
 
-namespace ObisConcept\FlowSentry\Domain\Service;
+namespace ObisConcept\NeosSentry\Domain\Service;
 
 /**
  * Copyright (C) 2018  obis|CONCEPT GmbH & Co. KG
@@ -32,7 +32,7 @@ class SentryClient
     protected $client;
 
     /**
-     * @Flow\InjectConfiguration(package="ObisConcept.FlowSentry")
+     * @Flow\InjectConfiguration(package="ObisConcept.NeosSentry")
      * @var array
      */
     protected $settings;

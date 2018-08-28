@@ -52,9 +52,8 @@ ObisConcept:
 
 ## Usage
 
-There are no specific usage instructions needed for this plugin.
-It injects itself in the lifecycle of any `*ExceptionHandler` class, which is done through AOP in particular.
-From thereon, if enabled, it sends any handled exception to the defined Sentry host.
+_[To be written]_
+<!-- There are no specific usage instructions needed for this plugin. -->
 
 ### Manual Logging
 

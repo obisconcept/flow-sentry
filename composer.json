@@ -32,5 +32,10 @@
         "neos": {
             "package-key": "ObisConcept.NeosSentry"
         }
+    },
+    "autoload": {
+        "psr-4": {
+            "ObisConcept\\NeosSentry\\": "Classes/"
+        }
     }
 }

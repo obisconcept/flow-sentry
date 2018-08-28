@@ -40,7 +40,7 @@ ObisConcept:
     host: 'my-company.com'
 ```
 
-### Turning off remote logging
+### Turning off automated logging
 
 If you want to turn off the automated logging functionalities (whysoever), you can simply disable it like this:
 

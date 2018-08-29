@@ -17,7 +17,7 @@ For the Configuration of Sentry within Neos, you'll need at least two values.
 - The project's public key
 - The project's identifier
 
-You may find these information on your Sentry project page by clicking on "Installation Instructions" or through navigating to `https://sentry.io/[your-company]/[your-project]/getting-started/php`.
+You may find these information on your Sentry project page by clicking on "Installation Instructions" or through navigating to `https://sentry.io/[your-company]/[your-project]/getting-started/php`.    
 On this page, Sentry provides you a sample link for the Raven Client DSN, looking as following:
 
 > https://3c613164xxxxxxxxxxx2beb58b3be87b@sentry.io/126xxxx
@@ -27,7 +27,7 @@ The last part of the url after the slash is the id of your project.
 
 ### for automated error reporting
 
-You need to set the Project configuration globally as an environmental variable.
+You need to set the Project configuration globally as an environmental variable.    
 This is due to the fact, that you cannot rely on any component (such as the Configuration component from Flow) during error reporting, as it might be broken at this point in time.
 
 It is recommended to configure the values in your local `.htaccess` file below the webroot.
@@ -42,8 +42,19 @@ SetEnv SENTRY_PROJECT_ID 126xxxx
 
 The host can be omitted as it defaults to `sentry.io`. Only specify it if you use a self-hosted Sentry instance.
 
-If you omit one of the other variables, remote exception logging will _silently_ fail!
+If you omit one of the other variables, remote exception logging will _silently_ fail!    
 This is because this plugin should never break any existing error reporting, and complaining about wrong configuration values within the handling of another error could lead to undefined behaviour.
+
+**Please note** that the Sentry exception handler get's only registered automatically in Production context!    
+If you want to have it working also in other contexts you have to configure it globally or per-context within your `Settings.yaml` as following:
+
+``` yaml
+Neos:
+  Flow:
+    error:
+      exceptionHandler:
+        className: 'ObisConcept\NeosSentry\Error\SentryExceptionHandler'
+```
 
 ### for manual usage
 
@@ -68,6 +79,8 @@ ObisConcept:
 ```
 
 ## Usage
+
+### Automated Logging
 
 There are no special usage instructions required for the automated error reporting.
 When you configured it properly as described above, it should work out-of-the-box.

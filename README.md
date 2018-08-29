@@ -45,17 +45,6 @@ The host can be omitted as it defaults to `sentry.io`. Only specify it if you us
 If you omit one of the other variables, remote exception logging will _silently_ fail!    
 This is because this plugin should never break any existing error reporting, and complaining about wrong configuration values within the handling of another error could lead to undefined behaviour.
 
-**Please note** that the Sentry exception handler get's only registered automatically in Production context!    
-If you want to have it working also in other contexts you have to configure it globally or per-context within your `Settings.yaml` as following:
-
-``` yaml
-Neos:
-  Flow:
-    error:
-      exceptionHandler:
-        className: 'ObisConcept\NeosSentry\Error\SentryExceptionHandler'
-```
-
 ### for manual usage
 
 If you want to use the SentryClient service class directly in your code, you need to configure at least the project key and identifier in your `Settings.yaml`:
@@ -84,6 +73,20 @@ ObisConcept:
 
 There are no special usage instructions required for the automated error reporting.
 When you configured it properly as described above, it should work out-of-the-box.
+
+**Please note** that the Sentry exception handler get's only registered automatically in Production context!    
+If you want to have it working also in other contexts you have to configure it globally or per-context within your `Settings.yaml` as following:
+
+``` yaml
+Neos:
+  Flow:
+    error:
+      exceptionHandler:
+        className: 'ObisConcept\NeosSentry\Error\SentryExceptionHandler'
+```
+
+Also note, that the class `SentryExceptionHandler` extends the `Neos\Flow\Error\ProductionExceptionHandler` so no debugging output is shown directly on page!    
+It is recommended to leave the handler configuration untouched and not to configure Sentry as handler for other contexts, because Neos rapidly floods up your quota with development related exception messages.
 
 ### Manual Logging
 

@@ -28,14 +28,13 @@ class SentryExceptionHandler extends ProductionExceptionHandler
             $context = [
                 'extra' => [
                     'Request Type' => constant('FLOW_SAPITYPE'),
-                    'Flow Context' => (constant('FLOW_CONTEXT') ? : 'Development'),
+                    'Flow Context' => (defined('FLOW_CONTEXT') ? constant('FLOW_CONTEXT') : 'Development'),
                     'Project Root' => constant('FLOW_PATH_ROOT'),
                     'Document Root' => constant('FLOW_PATH_WEB'),
                     'Flow Version' => constant('FLOW_VERSION_BRANCH'),
                 ],
                 'fingerprint' => ['{{ default }}', get_class($exception)],
-                'level' => 'error',
-                'logger' => [self::class],
+                'level' => 'error'
             ];
 
             $sentry->captureException($exception, $context);
@@ -56,6 +55,8 @@ class SentryExceptionHandler extends ProductionExceptionHandler
         $host = getenv('SENTRY_HOST') ?: 'sentry.io';
         $key = getenv('SENTRY_PROJECT_KEY');
         $id = getenv('SENTRY_PROJECT_ID');
+
+        \Kint::dump($host, $key, $id);
 
         if ($key === false || $id === false) {
             throw new InvalidConfigurationException(

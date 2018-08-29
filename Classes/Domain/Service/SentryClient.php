@@ -2,6 +2,8 @@
 
 namespace ObisConcept\NeosSentry\Domain\Service;
 
+use Neos\Flow\Annotations as Flow;
+
 use Neos\Flow\Configuration\Exception\InvalidConfigurationException;
 
 /**
@@ -57,55 +59,6 @@ class SentryClient
         }
 
         $this->client = new \Raven_Client("https://$key@$host/$id");
-    }
-
-    /**
-     * Gets a property from the client.
-     *
-     * @see http://php.net/manual/de/language.oop5.overloading.php#object.get
-     * @param string $name The name of the property to get
-     * @return mixed The property's value
-     */
-    public function __get($name)
-    {
-        return $this->client->$name;
-    }
-
-    /**
-     * Sets a property on the client.
-     *
-     * @see http://php.net/manual/de/language.oop5.overloading.php#object.set
-     * @param string $name The name of the property to set
-     * @param mixed $value The new value of the property
-     * @return void
-     */
-    public function __set($name, $value)
-    {
-        $this->client->$name = $value;
-    }
-
-    /**
-     * Checks if a property exists on the client.
-     *
-     * @see http://php.net/manual/de/language.oop5.overloading.php#object.isset
-     * @param string $name The name of the property to check
-     * @return bool If the property exists
-     */
-    public function __isset($name)
-    {
-        return isset($this->client->$name);
-    }
-
-    /**
-     * Unsets a property from the client.
-     *
-     * @see http://php.net/manual/de/language.oop5.overloading.php#object.unset
-     * @param string $name The name of the property to unset
-     * @return void
-     */
-    public function __unset($name)
-    {
-        unset($this->client->$name);
     }
 
     /**

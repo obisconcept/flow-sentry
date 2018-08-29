@@ -7,21 +7,10 @@ use Neos\Flow\Error\ProductionExceptionHandler;
 use Neos\Neos\Domain\Model\User;
 use Neos\Neos\Domain\Service\UserService;
 use ObisConcept\NeosSentry\Domain\Service\SentryClient;
+use Neos\Flow\Configuration\Exception\InvalidConfigurationException;
 
 class SentryExceptionHandler extends ProductionExceptionHandler
 {
-    /**
-     * @Flow\Inject
-     * @var SentryClient
-     */
-    protected $sentryClient;
-
-    /**
-     * @Flow\Inject
-     * @var UserService
-     */
-    protected $userService;
-
     /**
      * @inheritDoc
      */
@@ -32,31 +21,52 @@ class SentryExceptionHandler extends ProductionExceptionHandler
             return;
         }
 
-        $context = [
-            'extra' => [
-                'Request Type' => constant('FLOW_SAPITYPE'),
-                'Flow Context' => (constant('FLOW_CONTEXT') ?: 'Development'),
-                'Project Root' => constant('FLOW_PATH_ROOT'),
-                'Document Root' => constant('FLOW_PATH_WEB'),
-                'Flow Version' => constant('FLOW_VERSION_BRANCH'),
-            ],
-            'fingerprint' => ['{{ default }}', get_class($exception)],
-            'level' => 'error',
-            'logger' => [self::class],
-        ];
+        try {
+            /** @var SentryClient $sentry */
+            $sentry = $this->prepareSentry();
 
-        // /** @var User|null $user */
-        // $user = $this->userService->getCurrentUser();
+            $context = [
+                'extra' => [
+                    'Request Type' => constant('FLOW_SAPITYPE'),
+                    'Flow Context' => (constant('FLOW_CONTEXT') ? : 'Development'),
+                    'Project Root' => constant('FLOW_PATH_ROOT'),
+                    'Document Root' => constant('FLOW_PATH_WEB'),
+                    'Flow Version' => constant('FLOW_VERSION_BRANCH'),
+                ],
+                'fingerprint' => ['{{ default }}', get_class($exception)],
+                'level' => 'error',
+                'logger' => [self::class],
+            ];
 
-        // if ($user !== null) {
-        //     $context['user'] = [
-        //         'id' => $user->getName() . '(' . $user->getLabel() . ')',
-        //         'email' => $user->getPrimaryElectronicAddress(),
-        //     ];
-        // }
+            $sentry->captureException($exception, $context);
+        } catch (\Exception $e) {
+        } finally {
+            parent::handleException($exception);
+        }
+    }
 
-        $this->sentryClient->captureException($exception, $context);
+    /**
+     * Prepares the SentryClient.
+     *
+     * @return SentryClient
+     * @throws \RuntimeException
+     */
+    protected function prepareSentry()
+    {
+        $host = getenv('SENTRY_HOST') ?: 'sentry.io';
+        $key = getenv('SENTRY_PROJECT_KEY');
+        $id = getenv('SENTRY_PROJECT_ID');
 
-        parent::handleException($exception);
+        if ($key === false || $id === false) {
+            throw new InvalidConfigurationException(
+                "The Sentry client could not be initialized due to missing configuration environment variables!",
+                1535539443
+            );
+        }
+
+        $sentry = new SentryClient;
+        $sentry->setClient(new \Raven_Client("https://$key@$host/$id"));
+
+        return $sentry;
     }
 }

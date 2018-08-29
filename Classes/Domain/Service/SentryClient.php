@@ -2,6 +2,8 @@
 
 namespace ObisConcept\NeosSentry\Domain\Service;
 
+use Neos\Flow\Configuration\Exception\InvalidConfigurationException;
+
 /**
  * Copyright (C) 2018  obis|CONCEPT GmbH & Co. KG
  *
@@ -39,12 +41,20 @@ class SentryClient
 
     /**
      * @return void
+     * @throws InvalidConfigurationException
      */
     public function initializeObject()
     {
         $host = $this->settings['host'];
         $key = $this->settings['project']['key'];
         $id = $this->settings['project']['id'];
+
+        if (empty($key) || empty($id)) {
+            throw new InvalidConfigurationException(
+                'Missing required configuration for Sentry! You need to provide at least a project key and identifier.',
+                1535539692
+            );
+        }
 
         $this->client = new \Raven_Client("https://$key@$host/$id");
     }
@@ -122,5 +132,28 @@ class SentryClient
     public static function __callStatic($name, $arguments)
     {
         return call_user_func_array([\Raven_Client::class, $name], $arguments);
+    }
+
+    /**
+     * Get the underlying Raven_Client instance.
+     *
+     * @return \Raven_Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * Set the underlying Raven_Client instance.
+     *
+     * @param \Raven_Client $client
+     * @return self
+     */
+    public function setClient(\Raven_Client $client)
+    {
+        $this->client = $client;
+
+        return $this;
     }
 }

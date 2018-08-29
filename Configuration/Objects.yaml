@@ -1,7 +1,0 @@
-
-ObisConcept\NeosSentry\Error\DebugSentryExceptionHandler:
-  properties:
-    sentryClient:
-      object: 'ObisConcept\NeosSentry\Domain\Service\SentryClient'
-    userService:
-      object: 'Neos\Neos\Domain\Service\UserService'
